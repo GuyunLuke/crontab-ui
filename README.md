@@ -1,4 +1,46 @@
-Crontab UI
+Crontab UI (汉化版)
+====================
+
+> 🀄 基于 [alseambusher/crontab-ui](https://github.com/alseambusher/crontab-ui) 的汉化 fork，支持中英文切换。
+
+## 与上游的区别
+
+| 项目 | 原版 | 本 fork |
+|---|---|---|
+| 界面语言 | 英文 | **中文 / 英文可切换** |
+| 字体 | 系统默认 | 中文模式嵌入 MiSans 子集（28KB） |
+| dayjs 时间显示 | `2 hours ago` | 中文模式 `2 小时前` |
+| DataTables 分页 | 英文 | 跟随语言切换 |
+| 默认行为 | 英文 | **默认英文**，设环境变量切中文 |
+
+## 启用中文
+
+```bash
+# 任一环境变量以 zh 开头即可
+LANG=zh-CN node app.js
+# 或
+LANG=zh_CN.UTF-8 node app.js
+# 或
+APP_LANG=zh-CN node app.js
+```
+
+**Docker**
+
+```bash
+docker run -d -p 8000:8000 -e LANG=zh-CN guyunluke/crontab-ui
+```
+
+不设环境变量默认英文，完全兼容原版行为。
+
+## 汉化说明
+
+- 翻译文件在 `locales/`，欢迎补充或修正后提 PR
+- 中文模式下嵌入 MiSans Regular 子集 woff2（仅 UI 用到的 ~300 字符，28KB）
+- 如需加入新字符，编辑 `locales/zh-CN.json` 后运行 `pyftsubset` 重新生成字体子集
+
+---
+
+Crontab UI (原版 README)
 ==========
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=U8328Q7VFZMTS)
