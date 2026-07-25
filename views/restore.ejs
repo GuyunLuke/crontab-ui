@@ -1,13 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="<%= lang %>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crontab UI</title>
+<title><%= t('app.title') %></title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/bootstrap-icons.min.css" rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
+<script>var __T = <%- __LOCALES %>;</script>
 <script src="script.js"></script>
 <script type="text/javascript">
 	var crontabs = [];
@@ -26,11 +28,11 @@
 	<h2><%= db %></h2>
 	<table class="table">
 	<tr>
-		<th>Id</th>
+		<th><%= t('table.id') %></th>
 		<th></th>
-		<th>Job</th>
-		<th>Time</th>
-		<th>Last Modified</th>
+		<th><%= t('table.job') %></th>
+		<th><%= t('table.time') %></th>
+		<th><%= t('table.last_modified') %></th>
 	</tr>
 	<% var index = 1 %>
 	<% JSON.parse(crontabs).forEach(function(crontab){ %>
@@ -60,8 +62,8 @@
 
 
 	</table>
-	<a class="btn btn-primary" onclick="restore_backup('<%= db %>')"><i class="bi bi-arrow-counterclockwise"></i> Restore</a>
-	<a class="btn btn-danger" onclick="delete_backup('<%= db %>')"><i class="bi bi-trash"></i> Delete</a>
+	<a class="btn btn-primary" onclick="restore_backup('<%= db %>')"><i class="bi bi-arrow-counterclockwise"></i> <%= t('btn.restore') %></a>
+	<a class="btn btn-danger" onclick="delete_backup('<%= db %>')"><i class="bi bi-trash"></i> <%= t('btn.delete') %></a>
 </div>
 <%- include('popup.ejs') -%>
 </body>

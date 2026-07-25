@@ -1,16 +1,18 @@
 <!doctype html>
-<html lang="en">
+<html lang="<%= lang %>">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crontab UI</title>
+<title><%= t('app.title') %></title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/bootstrap-icons.min.css" rel="stylesheet">
 <link href="css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.bundle.min.js"></script>
 <script src="js/dataTables.min.js"></script>
 <script src="js/dataTables.bootstrap5.min.js"></script>
+<script>var __T = <%- __LOCALES %>;</script>
 <script src="script.js"></script>
 <script src="mailconfig.js"></script>
 <script type="text/javascript">
@@ -28,32 +30,32 @@
 <body>
 <%- include('navbar.ejs') -%>
 <div class="container-fluid">
-	<h2>Cronjobs</h2>
+	<h2><%= t('page.cronjobs') %></h2>
 	<div class="mb-3">
-		<label for="env_vars" class="form-label">Environment Variables:</label>
-		<textarea class="form-control" rows="3" id="env_vars" placeholder="# Please set PATH, MAILTO, HOME... here"></textarea>
+		<label for="env_vars" class="form-label"><%= t('page.env_vars') %></label>
+		<textarea class="form-control" rows="3" id="env_vars" placeholder="<%= t('page.env_placeholder') %>"></textarea>
 	</div>
 	<div class="mb-3">
-		<a class="btn btn-primary" onclick="newJob();"><i class="bi bi-plus-circle"></i> New</a>
-		<a class="btn btn-info" onclick="doBackup();"><i class="bi bi-download"></i> Backup</a>
+		<a class="btn btn-primary" onclick="newJob();"><i class="bi bi-plus-circle"></i> <%= t('btn.new') %></a>
+		<a class="btn btn-info" onclick="doBackup();"><i class="bi bi-download"></i> <%= t('btn.backup') %></a>
 		<form id="import_form" enctype="multipart/form-data" action="<%= JSON.parse(routes).import %>" method="post" style="display:none">
 			<input type="file" id="import_file" name="import_file" onchange="$('#import_form').submit()"/>
 		</form>
-		<a class="btn btn-warning" onclick="import_db()"><i class="bi bi-box-arrow-in-down"></i> Import</a>
-		<a class="btn btn-warning" href="<%= JSON.parse(routes).export %>"><i class="bi bi-box-arrow-up"></i> Export</a>
-		<a class="btn btn-success" onclick="getCrontab();"><i class="bi bi-arrow-down-circle"></i> Get from crontab</a>
-		<a class="btn btn-success" onclick="setCrontab();"><i class="bi bi-save"></i> Save to crontab</a>
-		<a class="btn btn-outline-secondary" onclick="previewCrontab();"><i class="bi bi-code-square"></i> Preview crontab</a>
+		<a class="btn btn-warning" onclick="import_db()"><i class="bi bi-box-arrow-in-down"></i> <%= t('btn.import') %></a>
+		<a class="btn btn-warning" href="<%= JSON.parse(routes).export %>"><i class="bi bi-box-arrow-up"></i> <%= t('btn.export') %></a>
+		<a class="btn btn-success" onclick="getCrontab();"><i class="bi bi-arrow-down-circle"></i> <%= t('btn.get_crontab') %></a>
+		<a class="btn btn-success" onclick="setCrontab();"><i class="bi bi-save"></i> <%= t('btn.save_crontab') %></a>
+		<a class="btn btn-outline-secondary" onclick="previewCrontab();"><i class="bi bi-code-square"></i> <%= t('btn.preview_crontab') %></a>
 	</div>
 
 	<table class="table table-striped" id="main_table">
 		<thead>
 	<tr>
-		<th>#</th>
-		<th>Name</th>
-		<th>Job</th>
-		<th>Time</th>
-		<th>Last Modified</th>
+		<th><%= t('table.number') %></th>
+		<th><%= t('table.name') %></th>
+		<th><%= t('table.job') %></th>
+		<th><%= t('table.time') %></th>
+		<th><%= t('table.last_modified') %></th>
 		<th></th>
 	</tr>
 </thead>
@@ -77,7 +79,7 @@
 						<% if (crontab.saved) { %>
 							<i class="bi bi-check-circle text-success"></i>
 						<% } else { %>
-							<a data-bs-toggle="tooltip" data-bs-placement="right" title="'Save to crontab' to deploy">
+							<a data-bs-toggle="tooltip" data-bs-placement="right" title="<%= t('job.unsaved_tip') %>">
 								<i class="bi bi-exclamation-circle text-warning"></i>
 							</a>
 						<% } %>
@@ -99,14 +101,14 @@
 
 		<% if (!crontab.stopped) { %>
 			<% if (crontab.logging && crontab.logging != "false") {%>
-					<a class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="left" title="stderr" href="<%= JSON.parse(routes).logger + '?id=' + crontab._id %>" target="_blank"><i class="bi bi-journal-text"></i></a>
-					<a class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="left" title="stdout" href="<%= JSON.parse(routes).stdout + '?id=' + crontab._id %>" target="_blank"><i class="bi bi-journal-text"></i></a>
+					<a class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="left" title="<%= t('job.stderr') %>" href="<%= JSON.parse(routes).logger + '?id=' + crontab._id %>" target="_blank"><i class="bi bi-journal-text"></i></a>
+					<a class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="left" title="<%= t('job.stdout') %>" href="<%= JSON.parse(routes).stdout + '?id=' + crontab._id %>" target="_blank"><i class="bi bi-journal-text"></i></a>
 			<% } %>
-					<a class="btn btn-sm btn-info" onclick="runJob('<%= crontab._id %>')"><i class="bi bi-play-fill"></i> Run now</a>
-					<a class="btn btn-sm btn-primary" onclick="editJob('<%= crontab._id %>')"><i class="bi bi-pencil-square"></i> Edit</a>
-					<a class="btn btn-sm btn-secondary" onclick="stopJob('<%= crontab._id %>')"><i class="bi bi-stop-fill"></i> Disable</a>
+					<a class="btn btn-sm btn-info" onclick="runJob('<%= crontab._id %>')"><i class="bi bi-play-fill"></i> <%= t('btn.run_now') %></a>
+					<a class="btn btn-sm btn-primary" onclick="editJob('<%= crontab._id %>')"><i class="bi bi-pencil-square"></i> <%= t('btn.edit') %></a>
+					<a class="btn btn-sm btn-secondary" onclick="stopJob('<%= crontab._id %>')"><i class="bi bi-stop-fill"></i> <%= t('btn.disable') %></a>
 		<% } else { %>
-					<a class="btn btn-sm btn-info" onclick="startJob('<%= crontab._id %>')"><i class="bi bi-play-fill"></i> Enable</a>
+					<a class="btn btn-sm btn-info" onclick="startJob('<%= crontab._id %>')"><i class="bi bi-play-fill"></i> <%= t('btn.enable') %></a>
 		<% } %>
 					<a class="btn btn-sm btn-warning" onclick="duplicateJob('<%= crontab._id %>')"><i class="bi bi-copy"></i></a>
 					<a class="btn btn-sm btn-danger" onclick="deleteJob('<%= crontab._id %>')"><i class="bi bi-trash"></i></a>
@@ -132,7 +134,21 @@
    			{orderable: false}
    		],
         	stateSave: true,
-        	stateDuration: 0
+        	stateDuration: 0,
+        	language: {
+        		search: __T['dt.search'],
+        		lengthMenu: __T['dt.lengthMenu'],
+        		info: __T['dt.info'],
+        		infoEmpty: __T['dt.infoEmpty'],
+        		infoFiltered: __T['dt.infoFiltered'],
+        		zeroRecords: __T['dt.zeroRecords'],
+        		paginate: {
+        			first: __T['dt.first'],
+        			last: __T['dt.last'],
+        			next: __T['dt.next'],
+        			previous: __T['dt.previous']
+        		}
+        	}
   	});
    });
  </script>

@@ -1,0 +1,26 @@
+/*
+ * crontab-ui 自定义样式
+ * MiSans 子集 woff2（仅含 UI 用到的 ~300 个字符，约 28KB）
+ */
+
+/* MiSans Regular - 子集 */
+@font-face {
+  font-family: "MiSans";
+  src: url("../fonts/MiSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 中文模式下使用 MiSans */
+html[lang="zh-CN"] body {
+  font-family: "MiSans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 中文模式下代码/命令区域保持等宽字体 */
+html[lang="zh-CN"] pre,
+html[lang="zh-CN"] code,
+html[lang="zh-CN"] textarea[id="job-command"],
+html[lang="zh-CN"] input[id="job-string"] {
+  font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+}

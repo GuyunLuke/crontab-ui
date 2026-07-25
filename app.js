@@ -8,6 +8,7 @@ const https = require('https');
 const mime = require('mime-types');
 const dayjs = require('dayjs');
 const relativeTime = require('dayjs/plugin/relativeTime');
+require('dayjs/locale/zh-cn');
 const busboy = require('connect-busboy');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -21,8 +22,21 @@ const errorHandler = require('./middleware/error');
 const { validateDbParam, validateIdParam } = require('./middleware/validate');
 
 dayjs.extend(relativeTime);
+dayjs.locale('zh-cn');
+
+// i18n — set LANG=zh-CN to enable Chinese; defaults to English
+// LANG=zh-CN 或 LANG=zh_CN.UTF-8 或 APP_LANG=zh-CN 均可启用中文
+const currentLang = (
+  (process.env.LANG && process.env.LANG.startsWith('zh')) ||
+  process.env.APP_LANG === 'zh-CN'
+) ? 'zh-CN' : 'en';
+const localeFile = path.join(__dirname, 'locales', currentLang + '.json');
+const locales = JSON.parse(fs.readFileSync(localeFile, 'utf8'));
+const t = (key) => locales[key] || key;
 
 const app = express();
+app.locals.t = t;
+app.locals.__LOCALES = locales;
 app.locals.baseURL = baseUrl;
 
 // security headers (relaxed for local/HTTP usage and CDN assets)
@@ -85,6 +99,8 @@ app.get(routes.root, (req, res) => {
       backups: crontab.get_backup_names(),
       env: crontab.get_env(),
       dayjs,
+      lang: currentLang,
+      __LOCALES: JSON.stringify(locales),
     });
   });
 });
@@ -139,6 +155,8 @@ app.get(routes.restore, validateDbParam, (req, res) => {
       crontabs: JSON.stringify(docs),
       backups: crontab.get_backup_names(),
       db: req.query.db,
+      lang: currentLang,
+      __LOCALES: JSON.stringify(locales),
     });
   });
 });
@@ -199,7 +217,7 @@ function sendLog(filePath, req, res) {
     res.set('Cache-Control', 'no-store');
     res.sendFile(filePath);
   } else {
-    res.type('text/plain').send('No errors logged yet');
+    res.type('text/plain').send(locales['log.no_errors']);
   }
 }
 

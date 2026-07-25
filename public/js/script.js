@@ -14,9 +14,9 @@ function infoMessageBox(message, title) {
 
 function errorMessageBox(message) {
   var msg =
-    'Operation failed: ' + message + '. ' +
-    'Please see error log for details.';
-  infoMessageBox(msg, 'Error');
+    __T['msg.operation_failed'] + ' ' + message + '. ' +
+    __T['msg.see_error_log'];
+  infoMessageBox(msg, __T['popup.error']);
 }
 
 function messageBox(body, title, ok_text, close_text, callback) {
@@ -49,7 +49,7 @@ var schedule = '';
 var job_command = '';
 
 function deleteJob(_id) {
-  messageBox('<p> Do you want to delete this Job? </p>', 'Confirm delete', null, null, function() {
+  messageBox('<p>' + __T['confirm.delete_job'] + '</p>', __T['confirm.delete'], null, null, function() {
     $.post(routes.remove, {_id: _id}, function() {
       location.reload();
     });
@@ -57,7 +57,7 @@ function deleteJob(_id) {
 }
 
 function stopJob(_id) {
-  messageBox('<p> Do you want to stop this Job? </p>', 'Confirm stop job', null, null, function() {
+  messageBox('<p>' + __T['confirm.stop_job'] + '</p>', __T['confirm.stop'], null, null, function() {
     $.post(routes.stop, {_id: _id}, function() {
       location.reload();
     });
@@ -65,7 +65,7 @@ function stopJob(_id) {
 }
 
 function startJob(_id) {
-  messageBox('<p> Do you want to start this Job? </p>', 'Confirm start job', null, null, function() {
+  messageBox('<p>' + __T['confirm.start_job'] + '</p>', __T['confirm.start'], null, null, function() {
     $.post(routes.start, {_id: _id}, function() {
       location.reload();
     });
@@ -73,7 +73,7 @@ function startJob(_id) {
 }
 
 function runJob(_id) {
-  messageBox('<p> Do you want to run this Job? </p>', 'Confirm run job', null, null, function() {
+  messageBox('<p>' + __T['confirm.run_job'] + '</p>', __T['confirm.run'], null, null, function() {
     $.post(routes.run, {_id: _id}, function() {
       location.reload();
     });
@@ -81,9 +81,9 @@ function runJob(_id) {
 }
 
 function setCrontab() {
-  messageBox('<p> Do you want to set the crontab file? </p>', 'Confirm crontab setup', null, null, function() {
+  messageBox('<p>' + __T['confirm.set_crontab'] + '</p>', __T['confirm.crontab_setup'], null, null, function() {
     $.get(routes.crontab, { 'env_vars': $('#env_vars').val() }, function() {
-      infoMessageBox('Successfully set crontab file!', 'Information');
+      infoMessageBox(__T['msg.set_crontab_ok'], __T['popup.information']);
       location.reload();
     }).fail(function(response) {
       errorMessageBox(response.statusText);
@@ -93,10 +93,10 @@ function setCrontab() {
 
 function getCrontab() {
   messageBox(
-    '<p> Do you want to get the crontab file? <br /> A backup will be created automatically before importing.</p>',
-    'Confirm crontab retrieval', null, null, function() {
+    '<p>' + __T['confirm.get_crontab'] + '</p>',
+    __T['confirm.crontab_retrieval'], null, null, function() {
       $.get(routes.import_crontab, { 'env_vars': $('#env_vars').val() }, function() {
-        infoMessageBox('Successfully got the crontab file!', 'Information');
+        infoMessageBox(__T['msg.get_crontab_ok'], __T['popup.information']);
         location.reload();
       });
     });
@@ -183,7 +183,7 @@ function duplicateJob(_id) {
   });
   if (!job) return;
 
-  var name = job.name ? job.name + ' (copy)' : '';
+  var name = job.name ? job.name + ' ' + __T['job.copy_suffix'] : '';
   var logging = (job.logging && job.logging != 'false') ? job.logging : 'false';
   var mailing = job.mailing || {};
 
@@ -200,7 +200,7 @@ function duplicateJob(_id) {
 }
 
 function doBackup() {
-  messageBox('<p> Do you want to take backup? </p>', 'Confirm backup', null, null, function() {
+  messageBox('<p>' + __T['confirm.backup'] + '</p>', __T['confirm.backup_title'], null, null, function() {
     $.get(routes.backup, {}, function() {
       location.reload();
     });
@@ -208,7 +208,7 @@ function doBackup() {
 }
 
 function delete_backup(db_name) {
-  messageBox('<p> Do you want to delete this backup? </p>', 'Confirm delete', null, null, function() {
+  messageBox('<p>' + __T['confirm.delete_backup'] + '</p>', __T['confirm.delete'], null, null, function() {
     $.get(routes.delete_backup, {db: db_name}, function() {
       location = routes.root;
     });
@@ -216,7 +216,7 @@ function delete_backup(db_name) {
 }
 
 function restore_backup(db_name) {
-  messageBox('<p> Do you want to restore this backup? </p>', 'Confirm restore', null, null, function() {
+  messageBox('<p>' + __T['confirm.restore_backup'] + '</p>', __T['confirm.restore'], null, null, function() {
     $.get(routes.restore_backup, {db: db_name}, function() {
       location = routes.root;
     });
@@ -225,8 +225,8 @@ function restore_backup(db_name) {
 
 function import_db() {
   messageBox(
-    '<p> Do you want to import crontab?<br /> A backup will be created automatically before importing.</p>',
-    'Confirm import from crontab', null, null, function() {
+    '<p>' + __T['confirm.import_crontab'] + '</p>',
+    __T['confirm.import_title'], null, null, function() {
       $('#import_file').click();
     });
 }
@@ -235,12 +235,11 @@ function setMailConfig(a) {
   var data = JSON.parse(a.getAttribute('data-json'));
   var container = document.createElement('div');
 
-  var message = "<p>This is based on nodemailer. Refer <a href='http://lifepluslinux.blogspot.com/2017/03/introducing-mailing-in-crontab-ui.html'>this</a> for more details.</p>";
-  container.innerHTML += message;
+  container.innerHTML += '<p>' + __T['mail.description'] + '</p>';
 
   var transporterLabel = document.createElement('label');
   transporterLabel.className = 'form-label';
-  transporterLabel.innerHTML = 'Transporter';
+  transporterLabel.innerHTML = __T['mail.transporter'];
   var transporterInput = document.createElement('input');
   transporterInput.type = 'text';
   transporterInput.id = 'transporterInput';
@@ -256,7 +255,7 @@ function setMailConfig(a) {
 
   var mailOptionsLabel = document.createElement('label');
   mailOptionsLabel.className = 'form-label';
-  mailOptionsLabel.innerHTML = 'Mail Config';
+  mailOptionsLabel.innerHTML = __T['mail.mail_config'];
   var mailOptionsInput = document.createElement('textarea');
   mailOptionsInput.setAttribute('placeholder', JSON.stringify(config.mailOptions, null, 2));
   mailOptionsInput.className = 'form-control';
@@ -271,7 +270,7 @@ function setMailConfig(a) {
 
   var button = document.createElement('a');
   button.className = 'btn btn-primary btn-sm';
-  button.innerHTML = 'Use Defaults';
+  button.innerHTML = __T['btn.use_defaults'];
   button.onclick = function() {
     document.getElementById('transporterInput').value = config.transporterStr;
     document.getElementById('mailOptionsInput').innerHTML = JSON.stringify(config.mailOptions, null, 2);
@@ -280,14 +279,14 @@ function setMailConfig(a) {
 
   var buttonClear = document.createElement('a');
   buttonClear.className = 'btn btn-secondary btn-sm';
-  buttonClear.innerHTML = 'Clear';
+  buttonClear.innerHTML = __T['btn.clear'];
   buttonClear.onclick = function() {
     document.getElementById('transporterInput').value = '';
     document.getElementById('mailOptionsInput').innerHTML = '';
   };
   container.appendChild(buttonClear);
 
-  messageBox(container, 'Mailing', null, null, function() {
+  messageBox(container, __T['mail.title'], null, null, function() {
     var transporterStr = document.getElementById('transporterInput').value;
     var mailOptions;
     try {
@@ -303,7 +302,7 @@ function setMailConfig(a) {
 }
 
 function setHookConfig(a) {
-  messageBox('<p>Coming Soon</p>', 'Hooks', null, null, null);
+  messageBox('<p>' + __T['hooks.coming_soon'] + '</p>', __T['hooks.title'], null, null, null);
 }
 
 function collapsedCommand() {
@@ -323,7 +322,7 @@ function set_schedule() {
 
 function previewCrontab() {
   $.get(routes.preview_crontab, function(data) {
-    document.getElementById('preview-crontab-content').textContent = data || '# (empty crontab)';
+    document.getElementById('preview-crontab-content').textContent = data || __T['preview.empty'];
     getModal('preview-crontab-modal').show();
   });
 }
@@ -332,9 +331,9 @@ function copyCrontab() {
   var text = document.getElementById('preview-crontab-content').textContent;
   navigator.clipboard.writeText(text).then(function() {
     var btn = document.querySelector('#preview-crontab-modal .btn-outline-secondary');
-    btn.innerHTML = '<i class="bi bi-check2"></i> Copied!';
+    btn.innerHTML = '<i class="bi bi-check2"></i> ' + __T['btn.copied'];
     setTimeout(function() {
-      btn.innerHTML = '<i class="bi bi-clipboard"></i> Copy';
+      btn.innerHTML = '<i class="bi bi-clipboard"></i> ' + __T['btn.copy'];
     }, 2000);
   });
 }
