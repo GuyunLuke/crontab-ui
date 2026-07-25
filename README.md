@@ -2,6 +2,8 @@
 
 基于 [alseambusher/crontab-ui](https://github.com/alseambusher/crontab-ui) 的汉化 fork，支持中英文切换。
 
+> ⚠️ **Vibe Coding 项目**：本项目通过 [Claude Code](https://claude.ai/code) + DeepSeek 以 vibe-coding 方式完成。代码未经人工逐行审查，生产使用请先自行验证。
+
 ## 与上游的区别
 
 | 项目 | 原版 | 本 fork |
