@@ -13,8 +13,24 @@
 | dayjs 时间显示 | `2 hours ago` | 中文模式 `2 小时前` |
 | 默认行为 | 英文 | 默认英文，设环境变量切中文 |
 | 全站限流 | 300 次 / 15 分钟 | **3000 次 / 15 分钟**（v0.4.4 起） |
+| 容器内 crond | 固定启动 | 可用 `CRON_AUTOSTART=false` 关闭（v0.4.5 起） |
 
 ## 版本变更
+
+### v0.4.5
+
+新增环境变量 `CRON_AUTOSTART`，控制容器内是否启动 crond，默认 `true`（与原行为一致）。
+
+```bash
+# 只把容器当编辑器：任务交给宿主机 cron 执行
+docker run -d -p 8000:8000 \
+  -e LANG=zh-CN \
+  -e CRON_AUTOSTART=false \
+  --mount type=bind,source=/var/spool/cron/crontabs/,target=/etc/crontabs/ \
+  crontab-ui-cn
+```
+
+适用场景：任务脚本位于宿主机、需要宿主机权限（挂载、内核模块、Docker 等），容器只负责编辑 crontab。此时不要再让容器内的 crond 执行，否则同一份 crontab 会被宿主机 cron 和容器 crond 各执行一次。
 
 ### v0.4.4 — 重大更改
 

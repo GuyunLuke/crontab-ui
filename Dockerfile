@@ -27,6 +27,9 @@ COPY . .
 ENV   HOST=0.0.0.0
 ENV   PORT=8000
 ENV   CRON_IN_DOCKER=true
+# 容器内是否启动 crond。设为 false 时容器只做编辑器，
+# 任务交由宿主机 cron 执行（需同时挂载宿主机的 crontab 目录）。
+ENV   CRON_AUTOSTART=true
 
 EXPOSE $PORT
 
