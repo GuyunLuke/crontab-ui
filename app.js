@@ -52,7 +52,7 @@ app.use(helmet({
 // rate limiting
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 300,
+  max: 3000,
   standardHeaders: true,
   legacyHeaders: false,
 }));
